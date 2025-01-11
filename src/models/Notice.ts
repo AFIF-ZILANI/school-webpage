@@ -24,6 +24,11 @@ const noticeSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  status: {
+    type: String,
+    required: true,
+    enum: ["ACTIVE", "COMMING", "DEACTIVATED", "PENDING", "SNOOSE"]
+  }
 });
 
 export const NoticeModel = mongoose.models.Notice || mongoose.model('Notice', noticeSchema);

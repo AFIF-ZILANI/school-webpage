@@ -38,11 +38,11 @@ const team = [
         role: "Assistant Devoloper & Data Manager",
         about: "Co-Founder of ZeroD",
         image: Tauhid,
-        github: "#",
+        github: "https://github.com/Tauhidrana",
         linkedin: "#",
-        email: "Tauhidrana00@gmail.com",
-        instagram: "https://instagram.com/afif_zilani",
-        twitter: "https://x.com/afif_zilani",
+        email: "tauhidrana00@gmail.com",
+        instagram: "https://instagram.com/tauhid.rana.52",
+        twitter: "#",
     },
     // Add more team members as needed
 ];

@@ -7,7 +7,7 @@ if (!process.env.MONGODB_URI) {
 }
 let isConnected: boolean = false; // Track the connection status
 
-export const dbConnect = async () => {
+export const connectDB = async () => {
     if (isConnected) {
         console.log("Already connected to the database");
         return;

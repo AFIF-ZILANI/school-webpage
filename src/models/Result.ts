@@ -4,11 +4,15 @@ export interface ISubjectResult {
     achievedMark: number;
     fullMark: number;
     grade: string;
-    teacherComment?: string;
 }
 
 export interface IResult {
-    examType: "Binomial" | "Final" | "Model";
+    academicYear: string;
+    examType: "BINOMIAL" | "FINAL" | "MODEL";
+    studentClass: "6" | "7" | "8" | "9" | "10";
+    gender: "BOY" | "GIRL";
+    group: "A" | "B" | "C" | "G";
+    studentRoll: string;
     subjects: ISubjectResult[];
     totalMark: number;
     gpa: number;
@@ -19,15 +23,31 @@ const SubjectResultSchema = new mongoose.Schema<ISubjectResult>({
     achievedMark: { type: Number, required: true },
     fullMark: { type: Number, required: true },
     grade: { type: String, required: true },
-    teacherComment: { type: String },
 });
+
 const resultSchema = new mongoose.Schema<IResult>({
+    academicYear: { type: String, required: true },
     examType: {
         type: String,
         required: true,
-        enum: ["Binomial", "Final", "Model"],
+        enum: ["BINOMIAL", "FINAL", "MODEL"],
     },
-
+    studentClass: {
+        type: String,
+        required: true,
+        enum: ["6", "7", "8", "9", "10"],
+    },
+    gender: {
+        type: String,
+        required: true,
+        enum: ["BOY", "GIRL"],
+    },
+    group: {
+        type: String,
+        required: true,
+        enum: ["A", "B", "C", "G"],
+    },
+    studentRoll: { type: String, required: true },
     subjects: [SubjectResultSchema],
     totalMark: { type: Number, required: true },
     gpa: { type: Number, required: true },
