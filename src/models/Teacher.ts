@@ -1,10 +1,12 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface ITeacher {
+export interface ITeacher {
     fullName: string;
     subject: string;
     id: string;
     position: string;
+    avatar_public_id: string;
+    avatar_url: string;
     yearsOfExperience: number;
     createdAt?: Date;
 }
@@ -29,6 +31,14 @@ const TeacherSchema: Schema = new Schema<ITeacher>({
     yearsOfExperience: {
         type: Number,
         required: true,
+    },
+    avatar_public_id: {
+        type: String,
+        required: true,
+    },
+    avatar_url: {
+       type: String,
+       required: true
     },
     createdAt: {
         type: Date,

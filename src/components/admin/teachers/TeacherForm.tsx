@@ -10,16 +10,20 @@ import { z } from "zod";
 import { ImageUploader } from "@/components/cloudinary/cloudinaryUpload";
 import Image from "next/image";
 import { useAddData } from "@/lib/apiRequest";
+import { Loader2 } from "lucide-react";
+import { AxiosError } from "axios";
+import { motion } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
 
 export interface TeacherFormData {
     fullName: string;
-    subjects: string;
+    subject: string;
     position: string;
     avatar: {
         public_id: string;
         url: string;
     };
-    yearsOfExprience: string;
+    yearsOfExperience: number;
     id: string;
 }
 
@@ -28,7 +32,7 @@ interface TeacherFormProps {
 }
 
 export function TeacherForm({ onCancel }: TeacherFormProps) {
-    const [error, setError] = useState("");
+    const [YOEError, setYOEError] = useState("");
     const [uploadedImage, setUploadedImage] = useState({
         public_id: "",
         url: "",
@@ -39,30 +43,51 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
             public_id: "",
             url: "",
         },
-        subjects: "",
-        yearsOfExprience: "",
+        subject: "",
+        yearsOfExperience: 0,
         position: "",
         id: "",
     });
 
-    const { mutate, error: submitError, data, variables, isLoading } = useAddData(
-        "/create-teacher",
-        "create-teacher",
-    );
+    const { toast } = useToast();
+    const { mutate, error, isLoading, isError, isSuccess, variables, data } =
+        useAddData("/create-teacher", "create-teacher");
 
     useEffect(() => {
-        console.log(submitError);
-        console.log(data);
-        console.log(variables);
-        console.log(isLoading);
-        console.log(uploadedImage);
-    }, [error, data, variables, isLoading, uploadedImage]);
+        // console.log(error);
+        // console.log(data);
+        // console.log(variables);
+        // console.log(isLoading);
+        // console.log(uploadedImage);
+
+        if (uploadedImage) {
+            setFormData({ ...formData, avatar: uploadedImage });
+        }
+
+        if (isSuccess) {
+            toast({
+                title: "Success!",
+                description: "Teacher added successfully!",
+                variant: "default",
+            });
+            onCancel();
+        }
+    }, [YOEError, uploadedImage, isSuccess]);
+
+    const validFormData =
+        formData.fullName &&
+        formData.position &&
+        formData.avatar &&
+        formData.subject &&
+        formData.yearsOfExperience &&
+        formData.id;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!uploadedImage.public_id || !uploadedImage.url) {
+            setYOEError("Please Select a Picture");
+        }
         mutate(formData);
-
-        onCancel();
     };
 
     const numberStringSchema = z
@@ -71,18 +96,18 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
-        // const parseResult = numberStringSchema.safeParse(value);
-        // if (parseResult.success) {
-        //     setError("");
-        //     const years = Number(parseResult.data);
-        //     if (years < 1 || years > 50) {
-        //         setError("Enter a valid exprience year");
-        //     }
-        //     setFormData({ ...formData, yearsOfExprience: years });
-        // } else {
-        //     setError(parseResult.error.errors[0].message);
-        // }
-        setFormData({ ...formData, yearsOfExprience: value });
+        const parseResult = numberStringSchema.safeParse(value);
+        if (parseResult.success) {
+            setYOEError("");
+            const years = Number(parseResult.data);
+            if (years < 1 || years > 50) {
+                setYOEError("Enter a valid exprience year");
+            }
+            setFormData({ ...formData, yearsOfExperience: years });
+        } else {
+            setYOEError(parseResult.error.errors[0].message);
+        }
+        // setFormData({ ...formData, yearsOfExprience: value });
     };
 
     return (
@@ -118,30 +143,40 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
                 </div>
 
                 <div>
-                    <Label htmlFor="subjects">Subjects (comma separated)</Label>
+                    <Label htmlFor="subject">Subjects</Label>
                     <Input
-                        id="subjects"
-                        value={formData.subjects}
+                        id="subject"
+                        value={formData.subject}
                         onChange={(e) =>
                             setFormData({
                                 ...formData,
-                                subjects: e.target.value,
+                                subject: e.target.value,
                             })
                         }
                         required
                     />
                 </div>
                 <div>
-                    <Label htmlFor="yearsOfExprience">
+                    <Label htmlFor="yearsOfExperience">
                         Years Of Experience
                     </Label>
                     <Input
-                        id="yearsOfExprience"
-                        value={formData.yearsOfExprience}
+                        id="yearsOfExperience"
+                        value={formData.yearsOfExperience}
                         onChange={handleChange}
                         required
                     />
-                    {error && <p style={{ color: "red" }}>{error}</p>}
+                    {YOEError && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg"
+                        >
+                            <p className="text-red-600 text-center font-medium">
+                                {YOEError}
+                            </p>
+                        </motion.div>
+                    )}
                 </div>
                 <div>
                     <Label htmlFor="id">Teacher Id (optional)</Label>
@@ -154,12 +189,17 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
                                 id: e.target.value,
                             })
                         }
+                        required
                     />
                 </div>
-                <div className="flex flex-col gap-4">
-                    <Label htmlFor="avatar">Picture</Label>
-                    <div className="flex justify-between pr-14">
-                        <ImageUploader setUploadedImage={setUploadedImage} />
+                <div className="">
+                    <div className="flex justify-between pr-14 items-center">
+                        <div className="flex flex-col gap-4">
+                            <Label htmlFor="avatar">Picture</Label>
+                            <ImageUploader
+                                setUploadedImage={setUploadedImage}
+                            />
+                        </div>
                         {uploadedImage.url && uploadedImage.public_id ? (
                             <Image
                                 src={uploadedImage.url}
@@ -175,9 +215,36 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
                     <Button type="button" variant="outline" onClick={onCancel}>
                         Cancel
                     </Button>
-                    <Button type="submit">Save Teacher</Button>
+                    <Button
+                        type="submit"
+                        disabled={isLoading || !validFormData}
+                    >
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                Adding...
+                            </>
+                        ) : (
+                            <>Add Teacher</>
+                        )}
+                    </Button>
                 </div>
             </form>
+            {isError && error instanceof AxiosError && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg"
+                >
+                    <p className="text-red-600 text-center font-medium">
+                        {error.response?.status === 500
+                            ? error.message
+                            : error.response?.status === 404
+                              ? error.message
+                              : "Invalid Data, Please Try Again!"}
+                    </p>
+                </motion.div>
+            )}
         </Card>
     );
 }

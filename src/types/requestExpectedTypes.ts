@@ -54,5 +54,16 @@ export interface CreateTeacherExpectedDataType {
         url: string
     },
     subject: string
-    yearsOfExprience: number
+    yearsOfExperience: number
+}
+
+export interface NoticeFormProps {
+    title: string;
+    content: string;
+    category: string;
+    file: {
+        public_id: string;
+        url: string;
+    };
+    isWithAttachment: boolean
 }

@@ -16,7 +16,7 @@ export async function GET() {
         return createSuccessResponse({
             statusCode: 200,
             message: "Teachers fetched successfully",
-            data: teachers[0],
+            data: teachers,
         });
     } catch (error) {
         return handleErrorResponse(error);
