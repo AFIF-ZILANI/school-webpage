@@ -7,8 +7,10 @@ import { CreateResultExpectedData } from "@/types/requestExpectedTypes";
 import { NextRequest } from "next/server";
 import { IResult, ResultModel } from "@/models/Result";
 import { connectDB } from "@/lib/db";
+import mongoose from "mongoose";
+import { IStudent, StudentModel } from "@/models/Student";
 
-const VALID_ACADEMIC_YEAR = ["2024", "2025"];
+// const VALID_ACADEMIC_YEAR = ["2024", "2025"];
 const VALID_EXAM_TYPES = ["BINOMIAL", "FINAL", "MODEL"];
 const VALID_CLASSES = ["6", "7", "8", "9", "10"];
 const VALID_GENDERS = ["BOY", "GIRL"];
@@ -19,33 +21,33 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const {
             academicYear,
-            gender,
+            branch,
             group,
-            studentRoll,
+            roll,
             examType,
             studentClass,
             gpa,
-            subjects,
+            subjectsData,
             totalMark,
         }: CreateResultExpectedData = body;
 
         if (
             !academicYear ||
-            !gender ||
+            !branch ||
             !group ||
-            !studentRoll ||
+            !roll ||
             !examType ||
             !studentClass ||
-            !subjects.length ||
+            !subjectsData.length ||
             !gpa ||
             !totalMark
         ) {
             return throwError("Missing required fields", 400);
         }
 
-        if (!VALID_ACADEMIC_YEAR.includes(academicYear)) {
-            return throwError("Enter a valid academic year", 400);
-        }
+        // if (!VALID_ACADEMIC_YEAR.includes(academicYear)) {
+        //     return throwError("Enter a valid academic year", 400);
+        // }
 
         if (!VALID_EXAM_TYPES.includes(examType)) {
             return throwError(
@@ -58,7 +60,7 @@ export async function POST(req: NextRequest) {
             return throwError("Class is required!", 400);
         }
 
-        if (!VALID_GENDERS.includes(gender)) {
+        if (!VALID_GENDERS.includes(branch)) {
             return throwError("Gender is required `BOY` or `GIRL`", 400);
         }
 
@@ -82,7 +84,7 @@ export async function POST(req: NextRequest) {
             throwError("Invalid totalMark", 400);
         }
 
-        subjects.map((value) => {
+        subjectsData.map((value) => {
             if (
                 !value.subject ||
                 !value.achievedMark ||
@@ -100,9 +102,9 @@ export async function POST(req: NextRequest) {
                     academicYear,
                     examType,
                     studentClass,
-                    gender,
+                    branch,
                     group,
-                    studentRoll,
+                    roll,
                 },
             },
         ]);
@@ -113,19 +115,36 @@ export async function POST(req: NextRequest) {
                 400,
             );
         }
+
+        const student: IStudent[] = await StudentModel.aggregate([
+            {
+                $match: {
+                    studentClass,
+                    branch,
+                    group,
+                    roll,
+                },
+            },
+        ]);
+
+        if (!student) {
+            throwError("Invalid Student data", 400);
+        }
+
         const createdResult = await ResultModel.create<IResult>({
             academicYear,
             examType,
             studentClass,
-            gender,
+            branch,
             group,
-            studentRoll,
-            subjects,
+            roll,
+            subjectData: subjectsData,
             totalMark,
+            student: new mongoose.Types.ObjectId(student[0]._id),
             gpa,
         });
-
-        if (!createdResult.length) {
+        console.log("test result:", createdResult);
+        if (!createdResult) {
             return throwError(
                 "Result not found, Try to validate your data again",
                 404,

@@ -1,22 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: {
-    domains: [
-      "www.freepik.com",
-      "pixabay.com",
-      "www.vecteezy.com",
-      "www.cleanpng.com",
-      "lovepik.com",
-      "pnghunter.com",
-      "www.pikpng.com",
-      "pngio.com",
-      "www.pngfind.com",
-      "www.pngkey.com",
-      "www.pngmart.com",
-      "images.unsplash.com"
-    ], // Add more hostnames as needed
-  }
+    async rewrites() {
+        return [
+            {
+                source: "/api/:path*",
+                destination: "http://localhost:3000/api/:path*",
+            },
+        ];
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "res.cloudinary.com",
+            },
+        ],
+    },
 };
 
 export default nextConfig;

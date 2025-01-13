@@ -769,3 +769,57 @@ export const mockGalleryImages = [
         description: "Children playing on the school playground",
         date: "2025-06-25",  },
 ];
+
+const mockResult = {
+    student: {
+        fullName: "John Doe",
+        class: "10",
+        branch: "Science",
+        group: "G", // Class 10 can only have group G
+        roll: "2024001",
+        academicYear: "2024",
+    },
+    result: {
+        examType: "FINAL",
+        academicYear: "2024",
+        subjects: [
+            {
+                subject: "Mathematics",
+                achievedMark: 85,
+                fullMark: 100,
+                grade: "A+",
+                teacherComment: "Excellent problem-solving skills",
+            },
+            {
+                subject: "Physics",
+                achievedMark: 78,
+                fullMark: 100,
+                grade: "A",
+                teacherComment: "Good theoretical understanding",
+            },
+            {
+                subject: "Chemistry",
+                achievedMark: 82,
+                fullMark: 100,
+                grade: "A+",
+                teacherComment: "Strong practical knowledge",
+            },
+            {
+                subject: "Biology",
+                achievedMark: 75,
+                fullMark: 100,
+                grade: "A",
+                teacherComment: "Needs more focus on diagrams",
+            },
+            {
+                subject: "English",
+                achievedMark: 88,
+                fullMark: 100,
+                grade: "A+",
+                teacherComment: "Excellent communication skills",
+            },
+        ],
+        totalMark: 408,
+        gpa: 4.85,
+    },
+};

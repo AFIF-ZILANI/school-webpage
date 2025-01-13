@@ -1,39 +1,28 @@
-// components/CloudinaryUpload.tsx
+"use client";
+import { CldUploadButton } from "next-cloudinary";
 import { useState } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+import { Button } from "../ui/button";
 
-const CloudinaryUpload = () => {
-    const [image, setImage] = useState<{
-        url: string;
-        public_id: string;
-    } | null>(null);
-
-    const handleUpload = () => {
-        openUploadWidget({}, (error, result) => {
-            if (result.event === "success") {
-                const { secure_url, public_id } = result.info;
-                setImage({ url: secure_url, public_id });
-                // Post the image URL and public_id to your API to save it to MongoDB
-                fetch("/api/upload", {
-                    method: "POST",
-                    body: JSON.stringify({ secure_url, public_id }),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-            }
+export function ImageUploader({
+    uploadedImage,
+    setUploadedImage,
+}: {
+    uploadedImage?: { public_id: ""; url: "" };
+    setUploadedImage: (image: { public_id: string; url: string }) => void;
+}) {
+    const handleUpload = (result: any) => {
+        setUploadedImage({
+            public_id: result.info.public_id,
+            url: result.info.secure_url,
         });
     };
 
     return (
-        <div>
-            <button onClick={handleUpload}>Upload Image</button>
-            {image && <img src={image.url} alt="Uploaded Image" />}
-        </div>
+            <div className=" bg-primary px-3 py-2 text-white rounded-lg">
+                <CldUploadButton
+                uploadPreset="teacher_con"
+                onSuccess={handleUpload}
+            />
+            </div>
     );
-};
-
-export default CloudinaryUpload;
-function openUploadWidget(arg0: {}, arg1: (error: any, result: any) => void) {
-    throw new Error("Function not implemented.");
 }
