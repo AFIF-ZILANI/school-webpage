@@ -33,12 +33,6 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
         public_id: "",
         url: "",
     });
-    const [TeacherImage, SetTeacherImage] = useState({
-        avatar: {
-            public_id: "",
-            url: "",
-        },
-    });
     const [formData, setFormData] = useState<TeacherFormData>({
         fullName: "",
         avatar: {
@@ -51,18 +45,23 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
         id: "",
     });
 
+    const { mutate, error: submitError, data, variables, isLoading } = useAddData(
+        "/create-teacher",
+        "create-teacher",
+    );
+
+    useEffect(() => {
+        console.log(submitError);
+        console.log(data);
+        console.log(variables);
+        console.log(isLoading);
+        console.log(uploadedImage);
+    }, [error, data, variables, isLoading, uploadedImage]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const {mutate, error, data, variables, isLoading} = useAddData("/create-teacher", "create-teacher")
-        mutate(formData)
+        mutate(formData);
 
-        useEffect(() => {
-          console.log(error)
-          console.log(data)
-          console.log(variables)
-          console.log(isLoading)
-          console.log(uploadedImage)
-        }, [error, data, variables, isLoading, uploadedImage])
         onCancel();
     };
 
