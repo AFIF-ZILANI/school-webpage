@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    async rewrites() {
+        return [
+            {
+                source: "/api/:path*",
+                destination: "http://localhost:3000/api/:path*",
+            },
+        ];
+    },
     images: {
         remotePatterns: [
             {
@@ -8,16 +16,6 @@ const nextConfig: NextConfig = {
                 hostname: "res.cloudinary.com",
             },
         ],
-    },
-    async headers() {
-        return [
-            {
-                source: "/api/:path*",
-                headers: [
-                    { key: "Access-Control-Allow-Origin", value: "*" }
-                ]
-            }
-        ];
     },
 };
 
