@@ -33,7 +33,7 @@ export function useAddData(endpoint: string) {
     });
 }
 
-// Hook for deleting data
+// Hook for deleting data //
 export function useDeleteData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
