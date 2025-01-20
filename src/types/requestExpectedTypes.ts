@@ -25,7 +25,7 @@ export interface getSubjectResultExpectedData {
     achievedMark: number;
     fullMark: number;
     grade: string;
-    teacherStatement: String;
+    teacherStatement: string;
 }
 export interface getResultExpecteDataType {
     _id?: string;

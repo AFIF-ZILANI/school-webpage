@@ -37,7 +37,6 @@ export default function AdminTeachers() {
                 <TeacherForm onCancel={() => setStatus(null)} />
             ) : status === "EDITING" ? (
                 <TeacherEditForm
-                    setFormData={setFormData}
                     formData={formData}
                     onCancel={() => setStatus(null)}
                 />

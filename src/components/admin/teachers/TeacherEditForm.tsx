@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,6 @@ import {
 interface TeacherFormProps {
     onCancel: () => void;
     formData: ITeacher;
-    setFormData: Dispatch<SetStateAction<ITeacher>>;
 }
 
 const positionArray = [
@@ -61,7 +60,6 @@ const subjectArray = [
 export function TeacherEditForm({
     onCancel,
     formData,
-    setFormData,
 }: TeacherFormProps) {
     const [YOEError, setYOEError] = useState("");
     const [phoneError, setPhoneError] = useState("");
@@ -72,7 +70,7 @@ export function TeacherEditForm({
 
     const { toast } = useToast();
 
-    const { error, isLoading, isError, isSuccess, data, mutate } =
+    const { error, isLoading, isError, isSuccess, mutate } =
         useUpdateData("/update-teacher");
 
     useEffect(() => {
@@ -91,7 +89,7 @@ export function TeacherEditForm({
                 variant: "destructive",
             });
         }
-    }, [isSuccess, isError]);
+    }, [isSuccess, isError, toast, onCancel]);
 
     const validFormData =
         formData.fullName &&
@@ -115,7 +113,7 @@ export function TeacherEditForm({
                 return;
             }
 
-            let updateDataObject: UpdateTeacherExpectedDataType = {
+            const updateDataObject: UpdateTeacherExpectedDataType = {
                 _id: "",
                 fullName: {
                     isUpdating: false,

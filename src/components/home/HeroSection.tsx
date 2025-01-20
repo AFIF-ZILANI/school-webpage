@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { slideUp, staggerContainer, staggerItem } from "@/lib/animation-utils";
+import { staggerContainer, staggerItem } from "@/lib/animation-utils";
 
 export function HeroSection() {
   return (

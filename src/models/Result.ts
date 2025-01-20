@@ -4,7 +4,7 @@ export interface ISubjectResult {
     achievedMark: number;
     fullMark: number;
     grade: string;
-    teacherStatement: String;
+    teacherStatement: string;
 }
 
 export interface IResult {

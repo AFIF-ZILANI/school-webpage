@@ -29,6 +29,7 @@ export function FileUploader({
         useDeleteData("/remove-file");
     const [fileUploadError, setFileUploadError] = useState("");
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleUpload = (result: any) => {
         if (result.event === "success") {
             setUploadedFile({
@@ -73,10 +74,10 @@ export function FileUploader({
                 variant: "destructive",
             });
         }
-        if (uploadedFile.public_id) {
-            console.log(uploadedFile);
-        }
-    }, [isError, isSuccess]);
+        // if (uploadedFile.public_id) {
+        //     // console.log(uploadedFile);
+        // }
+    }, [isError, isSuccess, toast, setUploadedFile]);
 
     function ShowImage() {
         document.body.style.overflowY = "scroll";

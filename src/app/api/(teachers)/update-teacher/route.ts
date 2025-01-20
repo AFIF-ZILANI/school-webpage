@@ -110,7 +110,7 @@ export async function PATCH(req: NextRequest) {
                 );
             }
         }
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: any = {};
         if (fullName.isUpdating) updateData.fullName = fullName.data;
         if (position.isUpdating) updateData.position = position.data;

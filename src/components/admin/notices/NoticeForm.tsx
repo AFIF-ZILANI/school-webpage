@@ -49,7 +49,7 @@ export function NoticeForm({
                 isWithAttachment: true,
             }));
         }
-    }, [uploadedFile]);
+    }, [uploadedFile, setFormData]);
 
     useEffect(() => {
         if (isSuccess) {
@@ -67,7 +67,7 @@ export function NoticeForm({
                 variant: "destructive",
             });
         }
-    }, [isSuccess, isError, toast]);
+    }, [isSuccess, isError, toast, onCancel]);
 
     function handleSubmit(event: React.FormEvent) {
         event.preventDefault();

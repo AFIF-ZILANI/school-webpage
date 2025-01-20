@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-const axiosInstance = axios.create({
-    baseURL: "http://localhost:3000",
-    headers: { "Content-Type": "application/json" },
-});
+// const axiosInstance = axios.create({
+//     baseURL: "http://localhost:3000",
+//     headers: { "Content-Type": "application/json" },
+// });
 
 // Hook for fetching data
 export function useGetData(endpoint: string) {
@@ -21,6 +21,8 @@ export function useGetData(endpoint: string) {
 export function useAddData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const addData = async (data: any) => {
         const response = await axios.post(`/api${endpoint}`, data);
         return response.data;
@@ -53,6 +55,8 @@ export function useDeleteData(endpoint: string) {
 export function useUpdateData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData = async (data: any) => {
         const response = await axios.patch(`/api${endpoint}`, data);
         return response.data;
@@ -69,6 +73,8 @@ export function useUpdateData(endpoint: string) {
 export function useUpdateEntireData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateEntireData = async (data: any) => {
         const response = await axios.put(`/api${endpoint}`, data);
         return response.data;

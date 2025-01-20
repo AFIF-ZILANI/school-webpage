@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { FileUploader } from "@/components/cloudinary/cloudinaryUpload";
-import { useAddData, useDeleteData } from "@/lib/apiRequest";
+import { useAddData } from "@/lib/apiRequest";
 import { Loader2 } from "lucide-react";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
@@ -77,7 +77,7 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
 
     const { toast } = useToast();
 
-    const { mutate, error, isLoading, isError, isSuccess, variables, data } =
+    const { mutate, error, isLoading, isError, isSuccess } =
         useAddData("/create-teacher");
 
     useEffect(() => {
@@ -93,7 +93,7 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
             });
             onCancel();
         }
-    }, [uploadedImage, isSuccess]);
+    }, [uploadedImage, isSuccess, toast, onCancel]);
 
     const validFormData =
         formData.fullName &&

@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { FileUploader } from "@/components/cloudinary/cloudinaryUpload";
-import { useAddData, useUpdateData } from "@/lib/apiRequest";
+import { useUpdateData } from "@/lib/apiRequest";
 import { useToast } from "@/hooks/use-toast";
 
 import {
@@ -55,7 +55,7 @@ export function NoticeEditForm({
                 attachment: editUploadedFile,
             }));
         }
-    }, [editUploadedFile]);
+    }, [editUploadedFile, onCancel, toast]);
     useEffect(() => {
         if (isSuccess) {
             toast({
@@ -72,9 +72,9 @@ export function NoticeEditForm({
                 variant: "destructive",
             });
         }
-    }, [isSuccess, isError]);
+    }, [isSuccess, isError, onCancel, toast]);
 
-    let updateObject: UpdateNoticeExpectedDataType = {
+    const updateObject: UpdateNoticeExpectedDataType = {
         title: {
             isUpdating: false,
             data: "",

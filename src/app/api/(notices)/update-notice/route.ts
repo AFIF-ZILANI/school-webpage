@@ -6,12 +6,10 @@ import {
 import { connectDB } from "@/lib/db";
 import { INotice, NoticeModel } from "@/models/Notice";
 import {
-    NoticeFormProps,
     UpdateNoticeExpectedDataType,
 } from "@/types/requestExpectedTypes";
 import { v2 } from "cloudinary";
 import { NextRequest } from "next/server";
-import React from "react";
 
 const valid_category = ["ACADEMIC", "EVENT", "ANNOUNCEMENT", "OTHER"];
 const valid_status = ["ACTIVE", "COMMING", "PENDING", "DEACTIVATED", "SNOOSE"];
@@ -92,7 +90,8 @@ export async function PATCH(req: NextRequest) {
                 );
             }
         }
-        let updateData: any = {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const updateData: any = {};
 
         if (title.isUpdating) updateData.title = title.data;
         if (content.isUpdating) updateData.content = content.data;

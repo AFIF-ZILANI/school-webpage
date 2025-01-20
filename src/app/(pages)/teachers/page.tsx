@@ -6,13 +6,10 @@ import { TeacherCard } from "@/components/teachers/TeacherCard";
 import { useGetData } from "@/lib/apiRequest";
 import { ITeacher } from "@/models/Teacher";
 import { Label } from "@radix-ui/react-label";
-import { SkeletonCard } from "@/components/util Comp/skeletonCard";
 import { Loader2 } from "lucide-react";
 import { merienda } from "@/components/fonts";
 import {
     Card,
-    CardHeader,
-    CardContent,
     CardFooter,
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
@@ -117,13 +114,13 @@ export default function TeachersPage() {
                                             <p
                                                 className={`font-bold text-gray-400`}
                                             >
-                                                "At Raigaon High School, we
+                                                &quot;At Raigaon High School, we
                                                 believe in nurturing not just
                                                 minds, but also hearts,
                                                 inspiring every student to reach
                                                 for the stars while staying
                                                 grounded in compassion and
-                                                integrity."
+                                                integrity.&quot;
                                                 <span
                                                     className={`text-white leading-8 block text-right ${merienda.className}`}
                                                 >

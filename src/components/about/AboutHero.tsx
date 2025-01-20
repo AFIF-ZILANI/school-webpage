@@ -16,9 +16,9 @@ export function AboutHero() {
                         Our Story
                     </h1>
                     <p className="text-[1rem] leading-6 px-3  md:text-xl text-muted-foreground">
-                        Raigaon High School is the academic institute's official
+                        Raigaon High School is the academic institute&#39;s official
                         name, as recognised with the education authority. The
-                        institute's native or alternate name is রাইগাঁও উচ্চ
+                        institute&#39;s native or alternate name is রাইগাঁও উচ্চ
                         বিদ্যালয়, which is commonly used in local Bengali
                         contexts. The Directorate of Secondary and Higher
                         Education has granted this institute a unique
@@ -31,7 +31,7 @@ export function AboutHero() {
                         recognised as secondary, denoting the level or grade of
                         approval. The institute is incorporated in the Monthly
                         Pay Order (MPO) system at Yes, which determines
-                        government funding for teacher wages.The institute's
+                        government funding for teacher wages.The institute&#39;s
                         official registration number with the MPO facility is
                         8305091301. Secondary institutions include schools,
                         colleges, universities, and vocational training centres.
@@ -41,10 +41,10 @@ export function AboutHero() {
                         Humanities, catering to a wide range of educational
                         demands and academic streams. The institute is
                         Co-Education (Separate), which indicates whether it is
-                        coeducational or serves only one gender. The institute's
+                        coeducational or serves only one gender. The institute&#39;s
                         classes are held during the day, reflecting the
                         operational timetable, which includes morning, day, and
-                        evening shifts. Managing oversees the institute's
+                        evening shifts. Managing oversees the institute&#39;s
                         operations and policies. The institute is located in
                         Grameen and belongs to a certain geographical or
                         administrative region.

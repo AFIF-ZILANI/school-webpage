@@ -53,6 +53,8 @@ export function DeleteItemComponent({
         deleteFuncTriggerd,
         id,
         mutate,
+        item, 
+        setUpdateList
     ]);
 
     return (

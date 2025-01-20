@@ -37,7 +37,7 @@ export function TeacherList({
             refetch();
             setUpdateTeacherList(false);
         }
-    }, [data, isLoading, updateTeacherList]);
+    }, [data, isLoading, updateTeacherList, refetch]);
     return (
         <div className="">
             {isLoading ? (

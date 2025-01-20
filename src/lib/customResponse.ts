@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface SuccessResponse<T = any> {
     statusCode: number;
     data?: T;
@@ -39,12 +40,18 @@ export function throwError(message: string, statusCode: number) {
     throw new CustomError(message, statusCode);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handleErrorResponse(error: any) {
-
-    if (error instanceof CustomError) { 
+    if (error instanceof CustomError) {
         console.error("Error : ", error.message); // for debugging in development
-        return createErrorResponse({ statusCode: error.statusCode, errorMessage: error.message });
+        return createErrorResponse({
+            statusCode: error.statusCode,
+            errorMessage: error.message,
+        });
     }
     console.error("Error : ", error.message); // for debugging in development
-    return createErrorResponse({ statusCode: 500, errorMessage: "Something went wrong on server" });
+    return createErrorResponse({
+        statusCode: 500,
+        errorMessage: "Something went wrong on server",
+    });
 }

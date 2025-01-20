@@ -22,7 +22,7 @@ export function MissionVision() {
                         <p className="text-muted-foreground text-center">
                             At Raigaon High School, our mission is to nurture a
                             supportive and inclusive educational environment.
-                            Since 1946, we've been committed to excellence,
+                            Since 1946, we&apos;ve been committed to excellence,
                             offering diverse academic programs in Business
                             Studies, Science, and Humanities. Our goal is to
                             empower students to reach their full potential and

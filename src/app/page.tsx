@@ -4,7 +4,7 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { StatsSection } from "@/components/home/StatsSection";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
 import { ExamMarkSheetReviewer } from "@/components/results/marksheetShowCase";
-import { CreatorsHero } from "@/components/creators/CreatorsHero";
+// import { CreatorsHero } from "@/components/creators/CreatorsHero";
 import { ImportantLinks } from "@/components/home/ImportantLinks";
 
 export default function Home() {

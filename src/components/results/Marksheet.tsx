@@ -147,7 +147,7 @@ export default function Marksheet({
                                         Grade
                                     </th>
                                     <th className="border-b px-2 md:px-4 py-2 md:py-3 text-left font-semibold text-gray-900">
-                                        Teacher's Comment
+                                        Teacher&apos;s Comment
                                     </th>
                                 </tr>
                             </thead>
@@ -218,7 +218,7 @@ export default function Marksheet({
                         <div className="text-center mt-4 md:mt-0">
                             <div className="w-32 md:w-48 border-t-2 border-gray-400 pt-1">
                                 <p className="font-semibold text-xs text-gray-900">
-                                    Principal's Signature
+                                    Principal&apos;s Signature
                                 </p>
                             </div>
                         </div>

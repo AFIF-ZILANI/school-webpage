@@ -8,8 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { merienda } from "../fonts";
 import { Label } from "@radix-ui/react-label";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 import { ITeacher } from "@/models/Teacher";
 
 export function TeacherCard({ teacher }: { teacher: ITeacher }) {

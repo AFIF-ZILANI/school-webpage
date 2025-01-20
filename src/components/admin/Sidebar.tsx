@@ -9,8 +9,6 @@ import {
     GraduationCap,
     Users,
     Image,
-    Info,
-    Users2,
     Bell,
     Settings,
     User,
@@ -57,16 +55,6 @@ const menuItems = [
         href: "/admin/profile",
         icon: User,
     },
-    //   {
-    //     title: "About",
-    //     href: "/admin/about",
-    //     icon: Info,
-    //   },
-    //   {
-    //     title: "Creators",
-    //     href: "/admin/creators",
-    //     icon: Users2,
-    //   },
 ];
 
 export function Sidebar() {

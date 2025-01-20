@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAddData } from "@/lib/apiRequest";
 import { AxiosError } from "axios";
@@ -18,7 +18,6 @@ import { Card } from "@/components/ui/card";
 import Marksheet from "@/components/results/Marksheet";
 import { Loader2, Search, ArrowRight, ArrowLeft } from "lucide-react";
 import { getResultExpecteDataType } from "@/types/requestExpectedTypes";
-import { CustomError } from "@/lib/customResponse";
 
 const years = Array.from({ length: 5 }, (_, i) =>
     (new Date().getFullYear() - i).toString(),
@@ -41,21 +40,7 @@ export default function MarksheetFinder() {
         roll: "",
     });
 
-    const {
-        isLoading,
-        error,
-        mutate,
-        isError,
-        status,
-        variables,
-        context,
-        isIdle,
-        failureCount,
-        isPaused,
-        isSuccess,
-        reset,
-        data,
-    } = useAddData("/get-results");
+    const { isLoading, error, mutate, isError } = useAddData("/get-results");
     // useEffect(() => {
     //     console.log("is loading", isLoading);
     //     console.log("is error", isError);
@@ -74,7 +59,7 @@ export default function MarksheetFinder() {
         e.preventDefault();
         mutate(formData, {
             onSuccess(data) {
-                console.log("Test Result Data:", data);
+                // console.log("Test Result Data:", data);
                 setResult(data.data);
             },
         });
