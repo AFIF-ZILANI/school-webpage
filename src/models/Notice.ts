@@ -1,34 +1,48 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const noticeSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  content: {
-    type: String,
-    required: true,
-  },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  category: {
-    type: String,
-    enum: ['ACADEMIC', 'EVENT', 'ANNOUNCEMENT', 'OTHER'],
-    default: 'OTHER',
-  },
-  attachments: [String],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  status: {
-    type: String,
-    required: true,
-    enum: ["ACTIVE", "COMMING", "DEACTIVATED", "PENDING", "SNOOSE"]
-  }
-});
+export interface INotice {
+    _id: string;
+    title: string;
+    content: string;
+    category: "ACADEMIC" | "EVENT" | "ANNOUNCEMENT" | "OTHER";
+    attachment: { public_id: string; url: string };
+    createdAt: string;
+    status: "ACTIVE" | "COMMING" | "DEACTIVATED" | "PENDING" | "SNOOSE";
+}
 
-export const NoticeModel = mongoose.models.Notice || mongoose.model('Notice', noticeSchema);
+const noticeSchema = new mongoose.Schema<INotice>({
+    title: {
+        type: String,
+        required: true,
+    },
+    content: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: String,
+        enum: ["ACADEMIC", "EVENT", "ANNOUNCEMENT", "OTHER"],
+        default: "OTHER",
+    },
+    attachment: {
+        public_id: {
+            type: String,
+            required: false,
+        },
+        url: {
+            type: String,
+            required: false,
+        },
+    },
+    createdAt: {
+        type: String,
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ["ACTIVE", "COMMING", "DEACTIVATED", "PENDING", "SNOOSE"],
+    },
+}, {timestamps: true});
+
+export const NoticeModel =
+    mongoose.models.Notice || mongoose.model("Notice", noticeSchema);

@@ -8,14 +8,25 @@ export interface IStudent {
     group: "A" | "B" | "C" | "G";
     roll: string;
     subject: "SCIENCE" | "ARTS" | "COMMERCE" | "VOCATIONAL" | "GENERAL";
-    avatar?: string;
+    avatar?: {
+        public_id: string;
+        url: string;
+    };
+
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 const StudentSchema = new mongoose.Schema<IStudent>({
-    fullName: { type: String, required: true },
-    id: { type: String, unique: true, required: false },
+    fullName: {
+        type: String,
+        required: true,
+    },
+    id: {
+        type: String,
+        unique: true,
+        required: false,
+    },
     studentClass: {
         type: String,
         required: true,
@@ -61,8 +72,14 @@ const StudentSchema = new mongoose.Schema<IStudent>({
     },
     roll: { type: String, required: true },
     avatar: {
-        type: String,
-        required: false,
+        public_id: {
+            type: String,
+            required: false,
+        },
+        url: {
+            type: String,
+            required: false,
+        },
     },
     createdAt: {
         type: Date,

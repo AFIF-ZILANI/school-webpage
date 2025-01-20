@@ -1,5 +1,5 @@
 "use client";
-import { Merienda } from "next/font/google";
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,7 @@ import { Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { getResultExpecteDataType } from "@/types/requestExpectedTypes";
-
-const merienda = Merienda({ subsets: ["latin"] });
+import { merienda } from "../fonts";
 
 export default function Marksheet({
     data,
@@ -50,13 +49,13 @@ export default function Marksheet({
             pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
 
             // Add watermark
-            pdf.setFontSize(40);
-            pdf.setTextColor(200, 200, 200);
-            pdf.setFont("helvetica", "italic");
-            pdf.text("RAIGAON HIGH SCHOOL", pdfWidth / 2, pdfHeight / 2, {
-                align: "center",
-                angle: 45,
-            });
+            // pdf.setFontSize(40);
+            // pdf.setTextColor(200, 200, 200);
+            // pdf.setFont("helvetica", "italic");
+            // pdf.text("RAIGAON HIGH SCHOOL", pdfWidth / 2, pdfHeight / 2, {
+            //     align: "center",
+            //     angle: 45,
+            // });
 
             pdf.save(`marksheet-${data.student.fullName}.pdf`);
         } finally {
@@ -65,89 +64,89 @@ export default function Marksheet({
     };
 
     return (
-        <div className="space-y-4 min-w-[70vw]">
-            <Button
-                onClick={handleDownload}
-                disabled={downloading}
-                className="ml-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-                <Download className="mr-2 h-4 w-4" />
-                <span>
-                    {downloading ? "Generating PDF..." : "Download Marksheet"}
-                </span>
-            </Button>
-
-            <Card className="p-8 bg-white shadow-2xl" id="marksheet">
-                <div className="relative">
+        <div className="space-y-4 min-w-[70vw] md:min-w-[50vw] lg:min-w-[40vw]">
+            <Card className="p-4 md:p-8 bg-white shadow-2xl " id="marksheet">
+                <div className="relative p-3">
                     {/* Decorative Background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 opacity-50 rounded-lg" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 opacity-50 rounded-lg" />
 
                     {/* Header */}
-                    <div className="relative text-center mb-8 pb-6 border-b-2 border-gray-200">
-                        <h1
-                            className={`text-4xl font-bold text-gray-900 mb-2 ${merienda.className}`}
-                        >
-                            Raigaon High School
-                        </h1>
-                        <div className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-full text-lg">
-                            {data.examType} Examination - {data.academicYear}
+                    <div className="relative mb-1 md:mb-8 pb-1 border-b-2 border-gray-200">
+                        <div className="text-center">
+                            <h1
+                                className={`text-2xl md:text-4xl font-bold text-gray-900 mb-2 ${merienda.className}`}
+                            >
+                                Raigaon High School
+                            </h1>
+                            <div
+                                className={`inline-block px-4 md:px-6 rounded-full text-sm md:text-lg ${merienda.className}`}
+                            >
+                                {data.examType} Examination -{" "}
+                                {data.academicYear}
+                            </div>
+                            <div className="text-gray-700 md:text-[0.85rem] text-[0.65rem]">
+                                (Official Marksheet By The Principal of Raigaon
+                                High School)
+                            </div>
+                        </div>
+                        <div className="text-gray-400 text-[0.65rem] mt-4">
+                            Marsheet ID: {data._id}
                         </div>
                     </div>
-
                     {/* Student Info */}
-                    <div className="grid grid-cols-2 gap-6 mb-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
+                    <div className="grid grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-8 bg-gray-50 p-4 md:p-6 rounded-lg border border-gray-100">
                         <div>
-                            <p className="text-sm font-medium text-gray-500 mb-1">
+                            <p className="text-xs md:text-sm font-medium text-gray-500 mb-1">
                                 Student Name
                             </p>
-                            <p className="text-lg font-semibold text-gray-900">
+                            <p className="text-sm md:text-lg font-semibold text-gray-900">
                                 {data.student.fullName}
                             </p>
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-gray-500 mb-1">
+                            <p className="text-xs md:text-sm font-medium text-gray-500 mb-1">
                                 Class
                             </p>
-                            <p className="text-lg font-semibold text-gray-900">
+                            <p className="text-sm md:text-lg font-semibold text-gray-900">
                                 {data.student.studentClass}
                             </p>
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-gray-500 mb-1">
+                            <p className="text-xs md:text-sm font-medium text-gray-500 mb-1">
                                 Branch
                             </p>
-                            <p className="text-lg font-semibold text-gray-900">
+                            <p className="text-sm md:text-lg font-semibold text-gray-900">
                                 {data.student.branch}
                             </p>
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-gray-500 mb-1">
+                            <p className="text-xs md:text-sm font-medium text-gray-500 mb-1">
                                 Roll Number
                             </p>
-                            <p className="text-lg font-semibold text-gray-900">
+                            <p className="text-sm md:text-lg font-semibold text-gray-900">
                                 {data.student.roll}
                             </p>
                         </div>
                     </div>
 
                     {/* Marks Table */}
-                    <div className="overflow-hidden rounded-lg border border-gray-200 mb-8">
-                        <table className="w-full border-collapse">
+                    <div className="overflow-hidden rounded-lg border border-gray-200 mb-4 md:mb-8">
+                        <table className="w-full border-collapse text-xs md:text-sm">
                             <thead>
                                 <tr className="bg-gradient-to-r from-gray-50 to-gray-100">
-                                    <th className="border-b px-4 py-3 text-left text-sm font-semibold text-gray-900">
+                                    <th className="border-b px-2 md:px-4 py-2 md:py-3 text-left font-semibold text-gray-900">
                                         Subject
                                     </th>
-                                    <th className="border-b px-4 py-3 text-center text-sm font-semibold text-gray-900">
+                                    <th className="border-b px-2 md:px-4 py-2 md:py-3 text-center font-semibold text-gray-900">
                                         Achieved Mark
                                     </th>
-                                    <th className="border-b px-4 py-3 text-center text-sm font-semibold text-gray-900">
+                                    <th className="border-b px-2 md:px-4 py-2 md:py-3 text-center font-semibold text-gray-900">
                                         Full Mark
                                     </th>
-                                    <th className="border-b px-4 py-3 text-center text-sm font-semibold text-gray-900">
+                                    <th className="border-b px-2 md:px-4 py-2 md:py-3 text-center font-semibold text-gray-900">
                                         Grade
                                     </th>
-                                    <th className="border-b px-4 py-3 text-left text-sm font-semibold text-gray-900">
+                                    <th className="border-b px-2 md:px-4 py-2 md:py-3 text-left font-semibold text-gray-900">
                                         Teacher's Comment
                                     </th>
                                 </tr>
@@ -158,20 +157,20 @@ export default function Marksheet({
                                         key={index}
                                         className="hover:bg-gray-50 transition-colors"
                                     >
-                                        <td className="border-b px-4 py-3 text-sm text-gray-900 font-medium">
+                                        <td className="border-b px-2 md:px-4 py-2 md:py-3 text-gray-900 font-medium">
                                             {subject.subject}
                                         </td>
-                                        <td className="border-b px-4 py-3 text-center text-sm text-gray-900">
-                                            <span className="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium">
+                                        <td className="border-b px-2 md:px-4 py-2 md:py-3 text-center text-gray-900">
+                                            <span className="inline-block bg-blue-50 text-blue-700 px-2 md:px-3 py-1 rounded-full font-medium">
                                                 {subject.achievedMark}
                                             </span>
                                         </td>
-                                        <td className="border-b px-4 py-3 text-center text-sm text-gray-600">
+                                        <td className="border-b px-2 md:px-4 py-2 md:py-3 text-center text-gray-600">
                                             {subject.fullMark}
                                         </td>
-                                        <td className="border-b px-4 py-3 text-center text-sm">
+                                        <td className="border-b px-2 md:px-4 py-2 md:py-3 text-center">
                                             <span
-                                                className={`inline-block px-3 py-1 rounded-full font-medium ${
+                                                className={`inline-block px-2 md:px-3 py-1 rounded-full font-medium ${
                                                     subject.grade === "A+"
                                                         ? "bg-green-50 text-green-700"
                                                         : subject.grade === "A"
@@ -182,7 +181,7 @@ export default function Marksheet({
                                                 {subject.grade}
                                             </span>
                                         </td>
-                                        <td className="border-b px-4 py-3 text-sm text-gray-600">
+                                        <td className="border-b px-2 md:px-4 py-2 md:py-3 text-gray-600">
                                             {subject.teacherStatement}
                                         </td>
                                     </tr>
@@ -190,16 +189,16 @@ export default function Marksheet({
                                 <tr className="bg-gray-50 font-medium">
                                     <td
                                         colSpan={2}
-                                        className="border-b px-4 py-3 text-sm text-gray-900"
+                                        className="border-b px-2 md:px-4 py-2 md:py-3 text-gray-900"
                                     >
                                         Total Marks
                                     </td>
-                                    <td className="border-b px-4 py-3 text-center text-sm text-gray-900">
+                                    <td className="border-b px-2 md:px-4 py-2 md:py-3 text-center text-gray-900">
                                         {data.totalMark}
                                     </td>
                                     <td
                                         colSpan={2}
-                                        className="border-b px-4 py-3 text-sm text-gray-900"
+                                        className="border-b px-2 md:px-4 py-2 md:py-3 text-gray-900"
                                     >
                                         GPA:{" "}
                                         <span className="text-blue-600 font-semibold">
@@ -212,13 +211,13 @@ export default function Marksheet({
                     </div>
 
                     {/* Footer */}
-                    <div className="flex justify-between items-end mt-16">
-                        <div className="text-sm text-gray-500">
+                    <div className="flex md:flex-row justify-between items-end mt-8 md:mt-16">
+                        <div className="text-xs md:text-sm text-gray-500">
                             Date: {new Date().toLocaleDateString()}
                         </div>
-                        <div className="text-center">
-                            <div className="w-48 border-t-2 border-gray-400 pt-2">
-                                <p className="font-semibold text-gray-900">
+                        <div className="text-center mt-4 md:mt-0">
+                            <div className="w-32 md:w-48 border-t-2 border-gray-400 pt-1">
+                                <p className="font-semibold text-xs text-gray-900">
                                     Principal's Signature
                                 </p>
                             </div>
@@ -226,13 +225,23 @@ export default function Marksheet({
                     </div>
 
                     {/* Watermark */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02]">
-                        <div className="transform rotate-45 text-6xl font-bold text-gray-900">
+                    {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02]">
+                        <div className="transform rotate-45 text-4xl md:text-6xl font-bold text-gray-900">
                             RAIGAON HIGH SCHOOL
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </Card>
+            <Button
+                onClick={handleDownload}
+                disabled={downloading}
+                className="ml-auto bg-primary shadow-lg hover:shadow-xl my-4 text-[0.9rem]"
+            >
+                <Download className="mr-2 h-4 w-4" />
+                <span>
+                    {downloading ? "Generating PDF..." : "Download Marksheet"}
+                </span>
+            </Button>
         </div>
     );
 }

@@ -5,39 +5,61 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { z } from "zod";
-import { ImageUploader } from "@/components/cloudinary/cloudinaryUpload";
-import Image from "next/image";
-import { useAddData } from "@/lib/apiRequest";
+import { FileUploader } from "@/components/cloudinary/cloudinaryUpload";
+import { useAddData, useDeleteData } from "@/lib/apiRequest";
 import { Loader2 } from "lucide-react";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
-
-export interface TeacherFormData {
-    fullName: string;
-    subject: string;
-    position: string;
-    avatar: {
-        public_id: string;
-        url: string;
-    };
-    yearsOfExperience: number;
-    id: string;
-}
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { ITeacher } from "@/models/Teacher";
+import {
+    validateBangladeshiPhone,
+    validateEmail,
+} from "@/lib/validation-utils";
 
 interface TeacherFormProps {
     onCancel: () => void;
 }
 
+const positionArray = [
+    "Headmaster",
+    "Assistant Headmaster",
+    "Teacher",
+    "Assistant Teacher",
+    "Librarian",
+    "Stafe",
+];
+
+const subjectArray = [
+    "Bangla",
+    "English",
+    "Science",
+    "Physics",
+    "Boilogy",
+    "Chemistry",
+    "General Math",
+    "Higher Math",
+    "Business Studies",
+    "Library & Information Science",
+    "Hidu Religion & Moral Education",
+    "Islam & Moral Education",
+    "Cultural Science",
+    "Physical Education",
+];
+
 export function TeacherForm({ onCancel }: TeacherFormProps) {
     const [YOEError, setYOEError] = useState("");
-    const [uploadedImage, setUploadedImage] = useState({
-        public_id: "",
-        url: "",
-    });
-    const [formData, setFormData] = useState<TeacherFormData>({
+    const [phoneError, setPhoneError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [formData, setFormData] = useState<ITeacher>({
         fullName: "",
         avatar: {
             public_id: "",
@@ -47,21 +69,20 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
         yearsOfExperience: 0,
         position: "",
         id: "",
+        email: "",
+        phone: "",
     });
 
+    const [uploadedImage, setUploadedImage] = useState(formData.avatar);
+
     const { toast } = useToast();
+
     const { mutate, error, isLoading, isError, isSuccess, variables, data } =
-        useAddData("/create-teacher", "create-teacher");
+        useAddData("/create-teacher");
 
     useEffect(() => {
-        // console.log(error);
-        // console.log(data);
-        // console.log(variables);
-        // console.log(isLoading);
-        // console.log(uploadedImage);
-
         if (uploadedImage) {
-            setFormData({ ...formData, avatar: uploadedImage });
+            setFormData((prev) => ({ ...prev, avatar: uploadedImage }));
         }
 
         if (isSuccess) {
@@ -72,22 +93,34 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
             });
             onCancel();
         }
-    }, [YOEError, uploadedImage, isSuccess]);
+    }, [uploadedImage, isSuccess]);
 
     const validFormData =
         formData.fullName &&
         formData.position &&
-        formData.avatar &&
+        formData.avatar.public_id &&
+        formData.avatar.url &&
         formData.subject &&
         formData.yearsOfExperience &&
         formData.id;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!uploadedImage.public_id || !uploadedImage.url) {
-            setYOEError("Please Select a Picture");
+        if (validFormData) {
+            if (formData.email && !validateEmail(formData.email)) {
+                setEmailError("Invalid Email");
+                return;
+            }
+
+            if (!validateBangladeshiPhone(formData.phone)) {
+                setPhoneError("Invalid Phone Number");
+                return;
+            }
+            setEmailError("");
+            setPhoneError("");
+            setYOEError("");
+            mutate(formData);
         }
-        mutate(formData);
     };
 
     const numberStringSchema = z
@@ -103,11 +136,10 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
             if (years < 1 || years > 50) {
                 setYOEError("Enter a valid exprience year");
             }
-            setFormData({ ...formData, yearsOfExperience: years });
+            setFormData((prev) => ({ ...prev, yearsOfExperience: years }));
         } else {
             setYOEError(parseResult.error.errors[0].message);
         }
-        // setFormData({ ...formData, yearsOfExprience: value });
     };
 
     return (
@@ -119,10 +151,10 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
                         id="fullName"
                         value={formData.fullName}
                         onChange={(e) =>
-                            setFormData({
-                                ...formData,
+                            setFormData((prev) => ({
+                                ...prev,
                                 fullName: e.target.value,
-                            })
+                            }))
                         }
                         required
                     />
@@ -130,31 +162,49 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
 
                 <div>
                     <Label htmlFor="porition">Position</Label>
-                    <Input
-                        id="position"
+                    <Select
                         value={formData.position}
-                        onChange={(e) =>
-                            setFormData({
-                                ...formData,
-                                position: e.target.value,
-                            })
+                        onValueChange={(value) =>
+                            setFormData((prev) => ({
+                                ...prev,
+                                position: value,
+                            }))
                         }
-                    />
+                        required
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Teacher's Position" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {positionArray.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                    {type}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 <div>
-                    <Label htmlFor="subject">Subjects</Label>
-                    <Input
-                        id="subject"
+                    <Label htmlFor="subject">Subject</Label>
+                    <Select
                         value={formData.subject}
-                        onChange={(e) =>
-                            setFormData({
-                                ...formData,
-                                subject: e.target.value,
-                            })
+                        onValueChange={(value) =>
+                            setFormData((prev) => ({ ...prev, subject: value }))
                         }
                         required
-                    />
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Teacher'subject" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {subjectArray.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                    {type}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
                 <div>
                     <Label htmlFor="yearsOfExperience">
@@ -179,37 +229,79 @@ export function TeacherForm({ onCancel }: TeacherFormProps) {
                     )}
                 </div>
                 <div>
-                    <Label htmlFor="id">Teacher Id (optional)</Label>
+                    <Label htmlFor="id">Teacher Id</Label>
                     <Input
                         id="id"
                         value={formData.id}
                         onChange={(e) =>
-                            setFormData({
-                                ...formData,
+                            setFormData((prev) => ({
+                                ...prev,
                                 id: e.target.value,
-                            })
+                            }))
                         }
                         required
                     />
                 </div>
-                <div className="">
-                    <div className="flex justify-between pr-14 items-center">
-                        <div className="flex flex-col gap-4">
-                            <Label htmlFor="avatar">Picture</Label>
-                            <ImageUploader
-                                setUploadedImage={setUploadedImage}
-                            />
-                        </div>
-                        {uploadedImage.url && uploadedImage.public_id ? (
-                            <Image
-                                src={uploadedImage.url}
-                                width={150}
-                                height={150}
-                                alt={`Picture of ${formData.fullName} `}
-                                className="rounded-lg"
-                            />
-                        ) : null}
+                <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <div className="flex items-center gap-3 pl-3">
+                        <span>+88</span>
+                        <Input
+                            id="phone"
+                            value={formData.phone}
+                            onChange={(e) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    phone: e.target.value,
+                                }))
+                            }
+                            required
+                        />
                     </div>
+                    {phoneError && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg"
+                        >
+                            <p className="text-red-600 text-center font-medium">
+                                {phoneError}
+                            </p>
+                        </motion.div>
+                    )}
+                </div>
+                <div>
+                    <Label htmlFor="email">Email (Optional)</Label>
+                    <Input
+                        id="email"
+                        value={formData.email}
+                        type="email"
+                        onChange={(e) =>
+                            setFormData((prev) => ({
+                                ...prev,
+                                email: e.target.value,
+                            }))
+                        }
+                    />
+                    {emailError && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg"
+                        >
+                            <p className="text-red-600 text-center font-medium">
+                                {emailError}
+                            </p>
+                        </motion.div>
+                    )}
+                </div>
+                <div className="flex flex-col gap-3">
+                    <Label htmlFor="avatar">Picture</Label>
+                    <FileUploader
+                        preset="teacher_con"
+                        uploadedFile={uploadedImage}
+                        setUploadedFile={setUploadedImage}
+                    />
                 </div>
                 <div className="flex justify-end space-x-4">
                     <Button type="button" variant="outline" onClick={onCancel}>

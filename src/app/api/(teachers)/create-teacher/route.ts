@@ -4,7 +4,11 @@ import {
     throwError,
 } from "@/lib/customResponse";
 import { connectDB } from "@/lib/db";
-import { ITeacher, TeacherModel } from "@/models/Teacher";
+import {
+    validateBangladeshiPhone,
+    validateEmail,
+} from "@/lib/validation-utils";
+import { TeacherModel } from "@/models/Teacher";
 import { CreateTeacherExpectedDataType } from "@/types/requestExpectedTypes";
 import { NextRequest } from "next/server";
 
@@ -19,6 +23,8 @@ export async function POST(req: NextRequest) {
             yearsOfExperience,
             id,
             avatar,
+            email,
+            phone,
         }: CreateTeacherExpectedDataType = body;
 
         // console.log(fullName, position, subject, yearsOfExperience, id, avatar);
@@ -27,7 +33,9 @@ export async function POST(req: NextRequest) {
             !position ||
             !subject ||
             !yearsOfExperience ||
-            !avatar
+            !avatar ||
+            !id ||
+            !phone
         ) {
             throwError("Some data of teacher is missing", 400);
         }
@@ -40,6 +48,13 @@ export async function POST(req: NextRequest) {
             throwError("Teacher's Image missing!", 400);
         }
 
+        if (!validateBangladeshiPhone(phone)) {
+            throwError("Invalid phone number", 400);
+        }
+
+        if (!!email && !validateEmail(email)) {
+            throwError("Invalid email", 400);
+        }
         // Todo: Add validation logic for `id`
 
         await connectDB();
@@ -49,9 +64,10 @@ export async function POST(req: NextRequest) {
             position,
             subject,
             yearsOfExperience,
-            avatar_public_id: avatar.public_id,
-            avatar_url: avatar.url,
-            id: id ? id : null,
+            avatar,
+            id,
+            phone,
+            email: email ? email : null,
         });
         // const teacher = await TeacherModel.create({
         //     fullName: "Hello Test",

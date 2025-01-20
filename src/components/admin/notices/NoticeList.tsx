@@ -1,80 +1,87 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { useGetData } from "@/lib/apiRequest";
+import { DeleteItemComponent } from "@/components/util Comp/deleteItemComponent";
+import { INotice } from "@/models/Notice";
+import { NoticeFormProps } from "@/types/requestExpectedTypes";
 
-interface Notice {
-  _id: string;
-  title: string;
-  category: string;
-  createdAt: string;
-}
+export function NoticeList({
+    setStatus,
+    setFormData,
+}: {
+    setStatus: Dispatch<SetStateAction<"CREATING" | "UPDATING" | null>>;
+    setFormData: Dispatch<SetStateAction<NoticeFormProps>>;
+}) {
+    const [notices, setNotices] = useState<INotice[]>([]);
+    const [updatNoticeList, setUpdateNoticeList] = useState(false);
+    const { isLoading, data, refetch } = useGetData("/get-notices");
 
-export function NoticeList() {
-  const [notices, setNotices] = useState<Notice[]>([]);
+    useEffect(() => {
+        if (data) {
+            setNotices(data.data);
+        }
+        if (updatNoticeList) {
+            refetch();
+        }
+    }, [data, isLoading, updatNoticeList]);
 
-  useEffect(() => {
-    fetch("/api/notices")
-      .then((res) => res.json())
-      .then(setNotices);
-  }, []);
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this notice?")) return;
-    
-    try {
-      const res = await fetch(`/api/notices/${id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        setNotices(notices.filter((notice) => notice._id !== id));
-      }
-    } catch (error) {
-      console.error("Failed to delete notice:", error);
-    }
-  };
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Category</TableHead>
-          <TableHead>Created At</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {notices.map((notice) => (
-          <TableRow key={notice._id}>
-            <TableCell>{notice.title}</TableCell>
-            <TableCell>{notice.category}</TableCell>
-            <TableCell>{formatDate(notice.createdAt)}</TableCell>
-            <TableCell className="text-right">
-              <Button variant="ghost" size="icon" className="mr-2">
-                <Edit2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleDelete(notice._id)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
+    return (
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {notices.map((notice) => (
+                    <TableRow key={notice._id}>
+                        <TableCell>{notice.title}</TableCell>
+                        <TableCell>{notice.category}</TableCell>
+                        <TableCell>{formatDate(notice.createdAt)}</TableCell>
+                        <TableCell className="flex items-center gap-3 justify-end">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="mr-2"
+                                onClick={() => {
+                                    setFormData({
+                                        _id: notice._id,
+                                        title: notice.title,
+                                        category: notice.category,
+                                        content: notice.content,
+                                        status: notice.status,
+                                        attachment: notice.attachment,
+                                    });
+                                    setStatus("UPDATING");
+                                }}
+                            >
+                                <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <DeleteItemComponent
+                                setUpdateList={setUpdateNoticeList}
+                                id={notice._id ?? ""}
+                                item="notice"
+                                endpoint="/delete-notice"
+                            />
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    );
 }

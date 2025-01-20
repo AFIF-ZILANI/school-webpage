@@ -28,6 +28,7 @@ export interface getSubjectResultExpectedData {
     teacherStatement: String;
 }
 export interface getResultExpecteDataType {
+    _id?: string;
     student: {
         fullName: string;
         id?: string;
@@ -44,26 +45,91 @@ export interface getResultExpecteDataType {
     gpa: number;
 }
 
-
 export interface CreateTeacherExpectedDataType {
-    fullName: string
-    id?: string
-    position: string
+    fullName: string;
+    id?: string;
+    position: string;
     avatar: {
-        public_id: string,
-        url: string
-    },
-    subject: string
-    yearsOfExperience: number
-}
-
-export interface NoticeFormProps {
-    title: string;
-    content: string;
-    category: string;
-    file: {
         public_id: string;
         url: string;
     };
-    isWithAttachment: boolean
+    email: string;
+    phone: string;
+    subject: string;
+    yearsOfExperience: number;
+}
+
+export interface NoticeFormProps {
+    _id: string
+    title: string;
+    content: string;
+    category: string;
+    attachment: {
+        public_id: string;
+        url: string;
+    };
+    isWithAttachment?: boolean;
+    status: string;
+}
+
+export interface UpdateNoticeExpectedDataType {
+    _id: string;
+    title: {
+        isUpdating: boolean;
+        data: string;
+    };
+    content: {
+        isUpdating: boolean;
+        data: string;
+    };
+    category: {
+        isUpdating: boolean;
+        data: string;
+    };
+    attachment: {
+        isUpdating: boolean;
+        data: {
+            public_id: string;
+            url: string;
+        };
+    };
+    status: {
+        isUpdating: boolean;
+        data: string;
+    };
+}
+
+export interface UpdateTeacherExpectedDataType {
+    _id?: string;
+    fullName: {
+        isUpdating: boolean;
+        data: string | null;
+    };
+    subject: {
+        isUpdating: boolean;
+        data: string | null;
+    };
+    position: {
+        isUpdating: boolean;
+        data: string | null;
+    };
+    avatar: {
+        isUpdating: boolean;
+        data: {
+            public_id: string | null;
+            url: string | null;
+        };
+    };
+    yearsOfExperience: {
+        isUpdating: boolean;
+        data: number;
+    };
+    email: {
+        isUpdating: boolean;
+        data: string | null;
+    };
+    phone: {
+        isUpdating: boolean;
+        data: string | null;
+    };
 }

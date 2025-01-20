@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Files } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -14,45 +13,45 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { ImageUploader } from "@/components/cloudinary/cloudinaryUpload";
+import { FileUploader } from "@/components/cloudinary/cloudinaryUpload";
 import { useAddData } from "@/lib/apiRequest";
 import { useToast } from "@/hooks/use-toast";
 
 import { NoticeFormProps } from "@/types/requestExpectedTypes";
+import { Loader2 } from "lucide-react";
 
-export function NoticeForm({ onCancel }: { onCancel: () => void }) {
-    const [formData, setFormData] = useState<NoticeFormProps>({
-        title: "",
-        content: "",
-        category: "NONE",
-        file: {
-            public_id: "",
-            url: "",
-        },
-        isWithAttachment: false,
-    });
+export function NoticeForm({
+    onCancel,
+    formData,
+    setFormData,
+}: {
+    onCancel: () => void;
+    formData: NoticeFormProps;
+    setFormData: Dispatch<SetStateAction<NoticeFormProps>>;
+}) {
     const [uploadedFile, setUploadedFile] = useState({
         public_id: "",
         url: "",
     });
-    const { data, isError, isLoading, isSuccess, mutate } = useAddData(
-        "/create-notice",
-        "create-notice",
-    );
+    const { isError, isLoading, isSuccess, mutate } =
+        useAddData("/create-notice");
 
     const { toast } = useToast();
 
+    const validFormData =
+        formData.title && formData.category && formData.content;
+
     useEffect(() => {
-        if (uploadedFile) {
-            setFormData({
-                ...formData,
-                file: {
-                    public_id: uploadedFile.public_id,
-                    url: uploadedFile.url,
-                },
-            });
-            setFormData({ ...formData, isWithAttachment: true });
+        if (uploadedFile.public_id) {
+            setFormData((prevData) => ({
+                ...prevData,
+                attachment: uploadedFile,
+                isWithAttachment: true,
+            }));
         }
+    }, [uploadedFile]);
+
+    useEffect(() => {
         if (isSuccess) {
             toast({
                 title: "Success!",
@@ -61,14 +60,23 @@ export function NoticeForm({ onCancel }: { onCancel: () => void }) {
             });
             onCancel();
         }
-    }, [isSuccess, uploadedFile]);
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+        if (isError) {
+            toast({
+                title: "Failed!",
+                description: "Notice Creation Failed, try again!",
+                variant: "destructive",
+            });
+        }
+    }, [isSuccess, isError, toast]);
+
+    function handleSubmit(event: React.FormEvent) {
+        event.preventDefault();
         mutate(formData);
-    };
+    }
+
     return (
         <Card className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
                 <div>
                     <Label htmlFor="title">Title</Label>
                     <Input
@@ -93,12 +101,12 @@ export function NoticeForm({ onCancel }: { onCancel: () => void }) {
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="academic">Academic</SelectItem>
-                            <SelectItem value="event">Event</SelectItem>
-                            <SelectItem value="announcement">
+                            <SelectItem value="ACADEMIC">Academic</SelectItem>
+                            <SelectItem value="EVENT">Event</SelectItem>
+                            <SelectItem value="ANNOUNCEMENT">
                                 Announcement
                             </SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="OTHER">Other</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -118,31 +126,35 @@ export function NoticeForm({ onCancel }: { onCancel: () => void }) {
                         rows={5}
                     />
                 </div>
-                <div>
+                <div className="space-y-3">
                     <Label htmlFor="attachment">Attachment</Label>
-                    <div className="flex justify-between pr-12 items-center">
-                        <ImageUploader setUploadedImage={setUploadedFile} />
-                        {uploadedFile && (
-                            <>
-                                <a
-                                    href={uploadedFile.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <Files className="w-10 h-10 cursor-pointer text-blue-600" />
-                                </a>
-                            </>
-                        )}
-                    </div>
+                    <FileUploader
+                        setUploadedFile={setUploadedFile}
+                        uploadedFile={uploadedFile}
+                        preset="file_con"
+                    />
                 </div>
 
                 <div className="flex justify-end space-x-4">
                     <Button type="button" variant="outline" onClick={onCancel}>
                         Cancel
                     </Button>
-                    <Button type="submit">Add Notice</Button>
+                    <Button
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={isLoading || !validFormData}
+                    >
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                Adding...
+                            </>
+                        ) : (
+                            <>Add Notice</>
+                        )}
+                    </Button>
                 </div>
-            </form>
+            </div>
         </Card>
     );
 }

@@ -10,29 +10,45 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2 } from "lucide-react";
 import { useGetData } from "@/lib/apiRequest";
 import { ITeacher } from "@/models/Teacher";
-import { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Label } from "@radix-ui/react-label";
+import { SkeletonData } from "@/components/util Comp/skeletonCard";
+import { DeleteItemComponent } from "@/components/util Comp/deleteItemComponent";
 
-export function TeacherList() {
-    const { data, isError, isLoading, error } = useGetData(
-        "/get-teachers",
-        "teachers",
-    );
-
-    const [teachers, setTeachers] = useState<ITeacher[] | null>(null);
+export function TeacherList({
+    setFormData,
+    setStatus,
+}: {
+    setFormData: Dispatch<SetStateAction<ITeacher>>;
+    setStatus: Dispatch<SetStateAction<"CREATING" | "EDITING" | null>>;
+}) {
+    const { data, isLoading, refetch } = useGetData("/get-teachers");
+    const [updateTeacherList, setUpdateTeacherList] = useState(false);
+    const [teachers, setTeachers] = useState<ITeacher[]>([]);
 
     useEffect(() => {
-        if (data){
-          console.log(data.data);
-        setTeachers(data.data);
+        if (data) {
+            setTeachers(data.data);
         }
-    }, [data, isLoading]);
-
+        if (updateTeacherList) {
+            refetch();
+            setUpdateTeacherList(false);
+        }
+    }, [data, isLoading, updateTeacherList]);
     return (
         <div className="">
-            {teachers ? (
+            {isLoading ? (
+                <div className="flex flex-col gap-3">
+                    <SkeletonData />
+                    <SkeletonData />
+                    <SkeletonData />
+                    <SkeletonData />
+                    <SkeletonData />
+                </div>
+            ) : teachers ? (
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -45,11 +61,15 @@ export function TeacherList() {
                     </TableHeader>
                     <TableBody>
                         {teachers.map((teacher) => (
-                            <TableRow key={teacher.id}>
+                            <TableRow key={teacher._id}>
                                 <TableCell className="flex items-center gap-3">
                                     <Avatar>
                                         <AvatarImage
-                                            src={teacher.avatar_url ? teacher.avatar_url: ""}
+                                            src={
+                                                teacher.avatar &&
+                                                teacher.avatar.url
+                                            }
+                                            className="object-contain"
                                             alt={teacher.fullName}
                                         />
                                         <AvatarFallback>
@@ -67,19 +87,39 @@ export function TeacherList() {
                                         variant="ghost"
                                         size="icon"
                                         className="mr-2"
+                                        onClick={() => {
+                                            setFormData({
+                                                _id: teacher._id,
+                                                fullName: teacher.fullName,
+                                                avatar: teacher.avatar,
+                                                yearsOfExperience:
+                                                    teacher.yearsOfExperience,
+                                                position: teacher.position,
+                                                subject: teacher.subject,
+                                                id: teacher.id,
+                                                phone: teacher.phone,
+                                                email: teacher.email,
+                                            });
+                                            setStatus("EDITING");
+                                        }}
                                     >
                                         <Edit2 className="h-4 w-4" />
                                     </Button>
-                                    <Button variant="ghost" size="icon">
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
+                                    <DeleteItemComponent
+                                        setUpdateList={
+                                            setUpdateTeacherList
+                                        }
+                                        endpoint="/delete-teacher"
+                                        item="teacher"
+                                        id={teacher._id || ""}
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             ) : (
-                <div>No teachers available</div>
+                <Label>No teachers available</Label>
             )}
         </div>
     );

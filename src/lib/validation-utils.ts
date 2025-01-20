@@ -4,10 +4,11 @@ export function validateEmail(email: string): boolean {
   return regex.test(email);
 }
 
-export function validatePhone(phone: string): boolean {
-  const regex = /^\+?[\d\s-]{10,}$/;
+export function validateBangladeshiPhone(phone: string): boolean {
+  const regex = /^(?:\+?8801|01)[3-9]\d{8}$/;
   return regex.test(phone);
 }
+
 
 export function validateRequired(value: string): boolean {
   return value.trim().length > 0;

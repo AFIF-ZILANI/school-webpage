@@ -55,23 +55,21 @@ export default function MarksheetFinder() {
         isSuccess,
         reset,
         data,
-    } = useAddData("/get-results", "result-data");
-    useEffect(() => {
-        // console.log("is loading", isLoading);
-        // console.log("is error", isError);
-        // console.log("Error", error);
-        // console.log("status", status);
-        console.log("variables", variables);
-        // console.log("context", context);
-        // console.log("is Idle", isIdle);
-        // console.log("failure Count", failureCount);
-        // console.log("is paused", isPaused);
-        // console.log("is success", isSuccess);
-        console.log("data", data);
+    } = useAddData("/get-results");
+    // useEffect(() => {
+    //     console.log("is loading", isLoading);
+    //     console.log("is error", isError);
+    //     console.log("Error", error);
+    //     console.log("status", status);
+    //     console.log("variables", variables);
+    //     console.log("context", context);
+    //     console.log("is Idle", isIdle);
+    //     console.log("failure Count", failureCount);
+    //     console.log("is paused", isPaused);
+    //     console.log("is success", isSuccess);
+    //     console.log("data", data);
 
-      
-        
-    }, [isLoading, error, isError]);
+    // }, [isLoading, error, isError]);
     const handleSearch = (e: React.MouseEvent) => {
         e.preventDefault();
         mutate(formData, {
@@ -109,9 +107,9 @@ export default function MarksheetFinder() {
                 <Select
                     value={formData.academicYear}
                     onValueChange={(value) => {
-                        console.log("Test academic Year:", value);
+                        // console.log("Test academic Year:", value);
                         setFormData({ ...formData, academicYear: value });
-                        console.log("Test formdata:", formData);
+                        // console.log("Test formdata:", formData);
                     }}
                 >
                     <SelectTrigger className="w-full">
@@ -151,7 +149,7 @@ export default function MarksheetFinder() {
             </div>
 
             <Button
-                className="w-full mt-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl h-12 text-lg"
+                className="w-full mt-8 bg-primary shadow-lg hover:shadow-xl h-12 text-lg max-w-[200px]"
                 onClick={handleNext}
                 disabled={!isStep1Valid}
             >
@@ -272,7 +270,7 @@ export default function MarksheetFinder() {
                     Back
                 </Button>
                 <Button
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl h-12"
+                    className="flex-1 bg-primary shadow-lg hover:shadow-xl h-12"
                     onClick={handleSearch}
                     disabled={isLoading || !isStep2Valid}
                 >
@@ -294,14 +292,14 @@ export default function MarksheetFinder() {
 
     return (
         <div className="space-y-8 flex flex-col items-center">
-            <Card className="p-8 shadow-xl bg-white/80 backdrop-blur-sm w-[50vw] min-w-[45vw]">
+            <Card className="p-8 shadow-xl bg-white/80 backdrop-blur-sm md:w-[50vw] w-[95vw] min-w-[45vw]">
                 {/* Progress Indicator */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between">
                         <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center ${
                                 step >= 1
-                                    ? "bg-blue-600 text-white"
+                                    ? "bg-primary text-white"
                                     : "bg-gray-200 text-gray-600"
                             }`}
                         >
@@ -309,13 +307,13 @@ export default function MarksheetFinder() {
                         </div>
                         <div
                             className={`h-1 w-16 mx-2 ${
-                                step > 1 ? "bg-blue-600" : "bg-gray-200"
+                                step > 1 ? "bg-primary" : "bg-gray-200"
                             }`}
                         />
                         <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center ${
                                 step >= 2
-                                    ? "bg-blue-600 text-white"
+                                    ? "bg-primary text-white"
                                     : "bg-gray-200 text-gray-600"
                             }`}
                         >

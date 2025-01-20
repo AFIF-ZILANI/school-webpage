@@ -3,37 +3,38 @@
 import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { NoticeCard } from "@/components/notices/NoticeCard";
-import { CreateNoticeDialog } from "@/components/notices/CreateNoticeDialog";
 import { useGetData } from "@/lib/apiRequest";
+import { Label } from "@radix-ui/react-label";
+import { Loader2 } from "lucide-react";
+
 
 export default function NoticesPage() {
-    const session = { user: { role: "student" } };
     const [notices, setNotices] = useState([]);
-
+    const { data, isLoading } = useGetData("/get-notices");
     useEffect(() => {
-      const fetchData = async () => {
-        const { data } = useGetData("/api/notices", "notices");
         if (data) {
-          setNotices(data);
+            setNotices(data.data);
         }
-      };
-      fetchData();
-    }, []);
+    }, [data, isLoading]);
 
     return (
         <div className="container py-8 min-h-[90vh] flex flex-col items-center">
             <PageHeader
                 title="Notice Board"
                 description="Stay updated with the latest announcements and events"
-            >
-                {session?.user.role === "teacher" && <CreateNoticeDialog />}
-            </PageHeader>
+            ></PageHeader>
 
-            <div className="grid gap-6">
-                {notices.map((notice, index) => (
-                    <NoticeCard key={index} notice={notice} />
-                ))}
-            </div>
+            {isLoading ? (
+                <Loader2 className="w-8 h-8 animate-spin"/>
+            ) : notices.length ? (
+                <div className="grid gap-6 md:w-[70%]">
+                    {notices.map((notice, index) => (
+                        <NoticeCard key={index} notice={notice} />
+                    ))}
+                </div>
+            ) : (
+                <Label>No notices are available now</Label>
+            )}
         </div>
     );
 }

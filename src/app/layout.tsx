@@ -16,14 +16,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
     children,
-    session,
 }: Readonly<{
     children: React.ReactNode;
-    session: any;
 }>) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={`${inter.className}`}>
                 <ReactQueryClientProvider>
                     <Navbar />
                     <main className="min-h-screen">{children}</main>

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: "http://localhost:3000",
     headers: { "Content-Type": "application/json" },
 });
 
@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 export function useGetData(endpoint: string) {
     const name = endpoint.split("/")[1];
     const fetchData = async () => {
-        const response = await axiosInstance.get(endpoint);
+        const response = await axios.get(`/api${endpoint}`);
         return response.data;
     };
 
@@ -22,7 +22,7 @@ export function useAddData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
     const addData = async (data: any) => {
-        const response = await axiosInstance.post(endpoint, data);
+        const response = await axios.post(`/api${endpoint}`, data);
         return response.data;
     };
 
@@ -38,7 +38,7 @@ export function useDeleteData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
     const deleteData = async (id: string) => {
-        const response = await axiosInstance.delete(endpoint);
+        const response = await axios.delete(`/api${endpoint}?id=${id}`);
         return response.data;
     };
 
@@ -54,7 +54,7 @@ export function useUpdateData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
     const updateData = async (data: any) => {
-        const response = await axiosInstance.patch(endpoint, data);
+        const response = await axios.patch(`/api${endpoint}`, data);
         return response.data;
     };
 
@@ -70,7 +70,7 @@ export function useUpdateEntireData(endpoint: string) {
     const queryClient = useQueryClient();
     const name = endpoint.split("/")[1];
     const updateEntireData = async (data: any) => {
-        const response = await axiosInstance.put(endpoint, data);
+        const response = await axios.put(`/api${endpoint}`, data);
         return response.data;
     };
 

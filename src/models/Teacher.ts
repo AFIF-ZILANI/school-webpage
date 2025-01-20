@@ -1,13 +1,18 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ITeacher {
+    _id?: string;
     fullName: string;
     subject: string;
     id: string;
     position: string;
-    avatar_public_id: string;
-    avatar_url: string;
+    avatar: {
+        public_id: string;
+        url: string;
+    };
     yearsOfExperience: number;
+    email?: string;
+    phone: string;
     createdAt?: Date;
 }
 
@@ -32,16 +37,28 @@ const TeacherSchema: Schema = new Schema<ITeacher>({
         type: Number,
         required: true,
     },
-    avatar_public_id: {
-        type: String,
-        required: true,
-    },
-    avatar_url: {
-       type: String,
-       required: true
+    avatar: {
+        public_id: {
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        },
     },
     createdAt: {
         type: Date,
+    },
+    email: {
+        type: String,
+        required: false,
+        unique: true,
+    },
+    phone: {
+        type: String,
+        required: false,
+        unique: true,
     },
 });
 

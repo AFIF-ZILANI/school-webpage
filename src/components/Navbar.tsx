@@ -1,7 +1,7 @@
 "use client";
 
-import { useState} from "react";
-import { usePathname} from "next/navigation";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
@@ -11,12 +11,27 @@ export function Navbar() {
     const pathname = usePathname();
 
     const navItems = [
-        { label: "About", href: "/about" },
-        { label: "Notices", href: "/notices" },
-        { label: "Results", href: "/results" },
-        { label: "Teachers", href: "/teachers" },
-        { label: "Gallery", href: "/gallery" },
-        { label: "Contact", href: "/contact" },
+        {
+            label: "About",
+            href: "/about",
+        },
+        {
+            label: "Notices",
+            href: "/notices",
+        },
+        {
+            label: "Results",
+            href: "/results",
+        },
+        {
+            label: "Teachers",
+            href: "/teachers",
+        },
+        {
+            label: "Contact",
+            href: "/contact",
+        },
+        
     ];
 
     const isActive = (href: string) => {
@@ -34,7 +49,7 @@ export function Navbar() {
                             className="flex-shrink-0 flex items-center"
                         >
                             <h1 className="text-xl font-bold text-gray-900">
-                                Raigon High School
+                                Raigaon High School
                             </h1>
                         </Link>
                     </div>
